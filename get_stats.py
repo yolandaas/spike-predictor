@@ -4,49 +4,70 @@
 import csv
 
 
+#########################
+#      PARAMETERS       #
+#########################
+
 # global parameters
-bases = {"A": 0, "C": 1, "T": 2, "G": 3}
+bases = {"A": 0, "C": 1, "T": 2, "G": 3, "-": 4}
 states = {"I": 0, "D": 1, "M": 2}
 
 
 # state rate tensors, row = y, col = s
 "FIXME: write to csv or to txt"
-insRate_tensor = []
-delRate_tensor = []
-matchRate_tensor = []
-
+insRate_tensor = [0] * 3
+delRate_tensor = [[0] * 3 for _ in range(4)]
+matchRate_tensor = [[0] * 3 for _ in range(4)]
 
 # transition residue tensors, row = y, col = x
-Qi_tensor = []
-Qm_tensor = []
+Qi_tensor = [0] * 4
+Qm_tensor = [[0] * 4 for _ in range(4)]
 
 
-def init_tensors():
-    # FIXME set proper tension size and shape
-    # currently all 2dim 
-    return
+#########################
+#     FILE READING      #
+#########################
 
+def get_align(file):
+    f = open(file, "r")
+    desc = ""
+    anc = ""
+
+    i = 0
+    for line in f:
+
+        if line[0] == ">":
+            i += 1
+        
+        elif i == 1:
+            desc += line
+        
+        elif i == 2:
+            anc += line
+
+    return desc, anc
+
+
+#########################
+#      PROCESSING       #
+#########################
 
 def process_align(pair_align_file):
-
-    # open pairwise alignment
-    pair_align = open(pair_align_file, "r").split("\n")
-    assert len(pair_align) == 2
-
     # obtain anc and desc
-    anc = pair_align[0]
-    desc = pair_align[1]
+    anc, desc = get_align(pair_align_file)
+    anc = anc.replace("\n", "")
+    desc = desc.replace("\n", "")
 
     # parameters
     align_len = len(anc)
     s = None
-    y = None
-    "FIXME: track len in place of state, or in addition to (?)"
     
     for i in range(align_len):
 
         anc_residue = anc[i] 
         desc_residue = desc[i]
+
+        # print(i, anc_residue, desc_residue)
 
         # ensure first bp is match
         if i == 0:
@@ -56,46 +77,73 @@ def process_align(pair_align_file):
         # ins
         if anc_residue == "-":
             assert desc_residue != "-"
-            count_ins(desc_residue, y, s)
+            count_ins(desc_residue, s)
             s = "I"
             
         # del
         elif desc_residue == "-":
-            count_del(y, s)
+            count_del(anc_residue, s)
             s = "D"
 
         # match
         else:
-            count_del(desc_residue, y, s)
+            if s is not None:
+                count_match(desc_residue, anc_residue, s)
             s = "M"
-
-        y = anc_residue
     
-    return
+    return None
 
 
-def count_ins(x, y, s):
-    y_int = bases[y]
+def count_ins(x, s):
+    x_int = bases[x]
     s_int = states[s]
-    delRate_tensor[y_int][s_int] += 1
-    Qi_tensor[y][x] += 1
-    return
+    insRate_tensor[s_int] += 1
+    Qi_tensor[x_int] += 1
+    return None
 
 
 def count_del(y, s):
     y_int = bases[y]
     s_int = states[s]
-    insRate_tensor[y_int][s_int] += 1
-    return
+    delRate_tensor[y_int][s_int] += 1
+    return None
 
 
 def count_match(x, y, s):
+    x_int = bases[x]
     y_int = bases[y]
     s_int = states[s]
     matchRate_tensor[y_int][s_int] += 1
-    Qm_tensor[y][x] += 1
+    Qm_tensor[y_int][x_int] += 1
+    return None
+
+
+#########################
+#        TENSORS        #
+#########################
+
+
+#### FIXME
+def calc_tensor_rate(tensor):
     return
 
 
+#### FIXME
 def write_tensors():
-    return
+    return None 
+
+
+def print_tensor(name=None, t=[]):
+    if name:
+        print(name)
+    for line in t:
+        print(line)
+    print("\n")
+
+
+process_align("./fastas/myseq0_align_2021-09-11.fasta")
+print_tensor("insRate\n", insRate_tensor)
+print_tensor("delRate\n", delRate_tensor)
+print_tensor("matchRate\n", matchRate_tensor)
+print_tensor("Qi\n", Qi_tensor)
+print_tensor("Qm\n", Qm_tensor)

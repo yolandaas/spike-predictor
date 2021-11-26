@@ -3,8 +3,7 @@
 
 ## Notation
 
-y = prev anc bp  
-z = curr anc bp  
+y = curr anc bp  
 x = descendant bp (inserted or matched)  
 
 s = prev state  
@@ -34,12 +33,14 @@ Matrices will be 4x3, with row i being the previous base, and col j being the pr
 
 P(is insertion, inserted bp | prev anc bp, prev state)
 
-P(is insertion | prev anc bp, prev state) * P(inserted bp | is insertion)  
--- may make it also consider len of ins/del  
+P(is insertion | prev anc bp, prev state) * P(inserted bp | is insertion, prev anc bp, prev state)  
 
-$P(I\:|\:y,\:s)\:*\:P(x\:|\:I)$  
+ins bp is independent of prev state so we take that out  
+insertion state and ins bp is independent of current ancestor bp, so it is also removed from both
 
-$insRate(y,\:s)\:*\:Q_i(y \rightarrow x)$
+$P(I\:|\:y)\:*\:P(x\:|\:I)$  
+
+$insRate(y,\:s)\:*\:Q_i(x)$
 
 
 <br/>
@@ -48,7 +49,6 @@ $insRate(y,\:s)\:*\:Q_i(y \rightarrow x)$
 ## Deletion
 
 P(is deletion | prev anc bp, prev state)  
--- may make it also consider len of ins/del  
 
 $P(D | y, s)$  
 
@@ -61,9 +61,11 @@ $delRate(y, s)$
 ## Match
 P(is match, match bp | prev anc bp, prev state)
 
-P(is match | prev anc bp, prev state) * P(match bp | is match)  
+P(is match | prev anc bp, prev state) * P(match bp | is match, prev anc bp, prev state)  
 
-$P(M\:|\:y,\:s)\:*\:P(x\:|\:M)$  
+match bp is independent of prev state so we take that out  
+
+$P(M\:|\:y,\:s)\:*\:P(x\:|\:M,\:y)$  
 
 $matchRate(y,\:s)\:*\:Q_m(y \rightarrow x)$
 
