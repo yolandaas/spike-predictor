@@ -42,7 +42,6 @@ $P(I\:|\:y)\:*\:P(x\:|\:I)$
 
 $insRate(y,\:s)\:*\:Q_i(x)$
 
-
 <br/>
 
 ***
@@ -72,4 +71,3 @@ $matchRate(y,\:s)\:*\:Q_m(y \rightarrow x)$
 
 ## Notes
 - 1000-5000 sequences  
-- begin with like 10 for proof of concept

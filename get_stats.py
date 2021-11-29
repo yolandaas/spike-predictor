@@ -14,7 +14,6 @@ states = {"I": 0, "D": 1, "M": 2}
 
 
 # state rate tensors, row = y, col = s
-"FIXME: write to csv or to txt"
 insRate_tensor = [0] * 3
 delRate_tensor = [[0] * 3 for _ in range(4)]
 matchRate_tensor = [[0] * 3 for _ in range(4)]
@@ -125,11 +124,17 @@ def count_match(x, y, s):
 
 #### FIXME
 def calc_tensor_rate(tensor):
+    new_tensor = []
     return
 
 
 #### FIXME
-def write_tensors():
+def write_tensor(tensor, tensor_name):
+    tensor_file = "./tensors"
+    f = open(f"{tensor_file}/{tensor_name}.csv", "w")
+    for line in tensor:
+        f.write(line)
+    f.close()
     return None 
 
 
@@ -140,8 +145,9 @@ def print_tensor(name=None, t=[]):
         print(line)
     print("\n")
 
+f = "myseq0_align_2021-09-11"
 
-process_align("./fastas/myseq0_align_2021-09-11.fasta")
+process_align(f"./fastas/{f}.fasta")
 print_tensor("insRate\n", insRate_tensor)
 print_tensor("delRate\n", delRate_tensor)
 print_tensor("matchRate\n", matchRate_tensor)
