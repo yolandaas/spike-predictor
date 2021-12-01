@@ -1,10 +1,14 @@
 # author Yolanda Shen
-# November 2021
+# November - December 2021
 
+import csv
 
 # tensors
 
 def read_tensors():
+    with open('file.csv', newline='') as f:
+        reader = csv.reader(f)
+        data = list(reader)
     return
 
 def insRate(y, s):

@@ -1,7 +1,7 @@
-import re
-
 # Author: Yolanda Shen
-# November 2021
+# November - December 2021
+
+import re
 
 # FIXME INCOMPLETE
 
@@ -11,7 +11,7 @@ alignment_folder = "./alignments"
 
 def convert_files(alignment_folder):
     alignment_path = open(alignment_folder, "r")
-    for file_name in alignment_path:                ###### FIXME
+    for file_name in alignment_path:                ###### FIXME to parse files in a folder
         convert_file(alignment_folder, file_name)
 
 
