@@ -27,34 +27,29 @@ G_rate_tensor = read_tensor("G_rate")
 Qi_rate_tensor = read_tensor("Qi_rate")[0]
 Qm_rate_tensor = read_tensor("Qm_rate")
 
-# print(A_rate_tensor)
-# print(C_rate_tensor)
-# print(T_rate_tensor)
-# print(G_rate_tensor)
-# print(Qi_rate_tensor)
-# print(Qm_rate_tensor)
-
-
 tensor_dict = {"A": A_rate_tensor, "C": C_rate_tensor, "T": T_rate_tensor, "G": G_rate_tensor}
 state_dict = {"M": "|", "S": "*", "I": "^", "D": "-"}
 
-# initialize simulation statistics
-mutations = ["|"] 
-
-def simulate(anc, mutations=mutations, p=False):
-    if p:
-        print(anc)
-    desc = generate_descendant(anc, mutations)
-    if p:
-        print(str.join("", mutations))
-        print(desc)
+def simulate(anc, n=1, p=False):
+    descs = []
+    muts = []
+    for i in range(n):
+        if p:
+            print(anc)
+        desc, mut = generate_descendant(anc)
+        descs += [desc]
+        muts += [mut]
+        if p:
+            print(str.join("", mut))
+            print(desc)
     
-    return desc, mutations
+    return descs, muts
 
 
-def generate_descendant(ancestor, mutations):
+def generate_descendant(ancestor):
     descendant = ancestor[0]
     prev_s = "M"
+    mutations=["|"]
     i = 1
     while i < len(ancestor):
         y = ancestor[i]
@@ -71,7 +66,7 @@ def generate_descendant(ancestor, mutations):
             i += 1
 
         prev_s = s
-    return descendant
+    return descendant, str.join("", mutations)
 
 
 def next_state(prev_s, y):

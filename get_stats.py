@@ -69,6 +69,10 @@ def process_align(pair_align_file):
     align_len = len(anc)
     prev_s = None
     s = None
+
+    if len(anc) != len(desc):
+        print(pair_align_file)
+        return
     
     for i in range(align_len):
 

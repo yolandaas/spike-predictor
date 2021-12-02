@@ -5,7 +5,7 @@ import re
 import os
 
 
-def convert_files(alignment_folder):   
+def convert_files(alignment_folder): 
     for file in os.listdir(alignment_folder):
         convert_file(alignment_folder, file)
 
@@ -17,8 +17,11 @@ def convert_file(alignment_folder, file_name):
 
     # COVID reference sequence name
     anc_name = "21563-25384"
-    desc_name = re.search("# 2: .*", f).group().split("# 2: ")[1]
-
+    desc_name = ""
+    try:
+        desc_name = re.search("# 2: .*", f).group().split("# 2: ")[1]
+    except:
+        print(file)
 
     f_by_line = f.split("\n")
     sequences = [line for line in f_by_line if len(line)>0 and line[0]!="#"]
