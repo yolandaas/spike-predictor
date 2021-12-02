@@ -1,6 +1,7 @@
 # Author: Yolanda Shen
 # November - December 2021
 
+import os
 import csv
 
 
@@ -29,6 +30,10 @@ Qm_tensor = [[0] * 4 for _ in range(4)]
 #########################
 #     FILE READING      #
 #########################
+
+def process_files(folder):
+    for file in os.listdir(folder):
+        process_align(folder+file)
 
 def get_align(file):
     f = open(file, "r")
@@ -91,7 +96,6 @@ def process_align(pair_align_file):
             s = "M"
         
         if prev_s:
-            print(i, anc_residue, desc_residue, prev_s, s)
             fill_hmm(prev_s, s, desc_residue, anc_residue)
         
         prev_s = s
@@ -134,20 +138,23 @@ def fill_hmm(prev_s, s, x, y):
 #########################
 
 
-def calc_tensor_rate(tensor):
-    new_tensor = []
+# def calc_tensor_rate(tensor):
+#     new_tensor = []
+
+#     if type(tensor[0]) != list:
+#         tensor = [tensor]
+
+#     for row in tensor:
+#         new_tensor += [[x/sum(row) if sum(row) > 0 else x for x in row]]
+#     return new_tensor
+
+
+def write_tensor(tensor_name, tensor):
+    tensor_file = "./tensors"
 
     if type(tensor[0]) != list:
         tensor = [tensor]
 
-    for row in tensor:
-        new_tensor += [[x/sum(row) if sum(row) > 0 else x for x in row]]
-    return new_tensor
-
-
-#### FIXME
-def write_tensor(tensor_name, tensor):
-    tensor_file = "./tensors"
     with open(f"{tensor_file}/{tensor_name}.csv", "w", newline="") as f:
         write = csv.writer(f)
         write.writerows(tensor)

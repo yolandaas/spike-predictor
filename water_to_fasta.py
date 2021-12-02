@@ -2,17 +2,12 @@
 # November - December 2021
 
 import re
-
-# FIXME INCOMPLETE
-
-# read from alignment
-alignment_folder = "./alignments"
+import os
 
 
-def convert_files(alignment_folder):
-    alignment_path = open(alignment_folder, "r")
-    for file_name in alignment_path:                ###### FIXME to parse files in a folder
-        convert_file(alignment_folder, file_name)
+def convert_files(alignment_folder):   
+    for file in os.listdir(alignment_folder):
+        convert_file(alignment_folder, file)
 
 
 def convert_file(alignment_folder, file_name):
@@ -47,7 +42,3 @@ def write_fasta(file_name, anc_name, anc, desc_name, desc):
     f = open(f"./fastas/{file_name}_{desc_name}.fasta", "w")
     f.write(f">{anc_name}\n{anc}\n>{desc_name}\n{desc}")
     f.close()
-
-
-# Testing
-convert_file(alignment_folder, "myseq0_align.fa")
